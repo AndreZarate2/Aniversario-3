@@ -106,21 +106,46 @@
     /* ===== GALLERY ===== */
     .gallery-section { background: rgba(254,240,245,0.5); }
     .gallery-wrapper { max-width: 600px; margin: 0 auto; }
+
     .carousel {
       position: relative; width: 100%; aspect-ratio: 4/3;
       border-radius: 1rem; overflow: hidden;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       touch-action: pan-y;
     }
+
     .carousel-slide {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; transition: all 0.7s ease;
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: all 0.7s ease;
       opacity: 0; transform: scale(0.95);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
-    .carousel-slide.active { opacity: 1; transform: scale(1); }
-    .carousel-slide .emoji { font-size: 4rem; margin-bottom: 0.5rem; }
-    .carousel-slide .label { color: var(--text-muted); font-weight: 500; font-size: 1.1rem; }
-    .carousel-slide .hint { color: var(--text-muted); opacity: 0.6; font-size: 0.85rem; margin-top: 0.5rem; }
+
+    .carousel-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Estilo ORIGINAL de las letras (restaurado) */
+    .carousel-slide .emoji {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+    }
+    .carousel-slide .label {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+    .carousel-slide .hint {
+      color: var(--text-muted);
+      opacity: 0.6;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
 
     .dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
     .dot {
@@ -229,25 +254,40 @@
   <!-- ===== MAIN CONTENT ===== -->
   <div class="main-content" id="mainContent">
 
-    <!-- Gallery -->
+    <!-- Gallery con fotos -->
     <section class="gallery-section">
       <div class="gallery-wrapper reveal">
         <h2 class="section-title gradient-text">Nuestros Recuerdos 📸</h2>
         <div class="carousel" id="carousel">
-          <div class="carousel-slide active" style="background:linear-gradient(135deg,rgba(232,67,147,0.15),rgba(162,155,254,0.15))">
-            <span class="emoji">💑</span><span class="label">Nuestro primer día</span><span class="hint">Desliza para ver más</span>
+          <!-- Slide 1 -->
+          <div class="carousel-slide active" style="background-image: url('1.jpg');">
+            <span class="emoji">💑</span>
+            <span class="label">Nuestro primer día</span>
+            <span class="hint">Desliza para ver más</span>
           </div>
-          <div class="carousel-slide" style="background:linear-gradient(135deg,rgba(162,155,254,0.15),rgba(224,86,160,0.15))">
-            <span class="emoji">🌹</span><span class="label">Momentos juntos</span><span class="hint">Agregar foto</span>
+          <!-- Slide 2 -->
+          <div class="carousel-slide" style="background-image: url('2.jpg');">
+            <span class="emoji">🌹</span>
+            <span class="label">Momentos juntos</span>
+            <span class="hint">Desliza para ver más</span>
           </div>
-          <div class="carousel-slide" style="background:linear-gradient(135deg,rgba(224,86,160,0.15),rgba(232,67,147,0.15))">
-            <span class="emoji">✨</span><span class="label">Risas y aventuras</span><span class="hint">Agregar foto</span>
+          <!-- Slide 3 -->
+          <div class="carousel-slide" style="background-image: url('3.jpg');">
+            <span class="emoji">✨</span>
+            <span class="label">Risas y aventuras</span>
+            <span class="hint">Desliza para ver más</span>
           </div>
-          <div class="carousel-slide" style="background:linear-gradient(135deg,rgba(232,67,147,0.1),rgba(224,86,160,0.1))">
-            <span class="emoji">💫</span><span class="label">Recuerdos bonitos</span><span class="hint">Agregar foto</span>
+          <!-- Slide 4 -->
+          <div class="carousel-slide" style="background-image: url('4.jpg');">
+            <span class="emoji">💫</span>
+            <span class="label">Recuerdos bonitos</span>
+            <span class="hint">Desliza para ver más</span>
           </div>
-          <div class="carousel-slide" style="background:linear-gradient(135deg,rgba(162,155,254,0.1),rgba(232,67,147,0.1))">
-            <span class="emoji">🥰</span><span class="label">Tu sonrisa</span><span class="hint">Agregar foto</span>
+          <!-- Slide 5 -->
+          <div class="carousel-slide" style="background-image: url('5.jpg');">
+            <span class="emoji">🥰</span>
+            <span class="label">Tu sonrisa</span>
+            <span class="hint">Desliza para ver más</span>
           </div>
         </div>
         <div class="dots" id="dots"></div>
@@ -284,6 +324,12 @@
 
   <!-- Music Button -->
   <button class="music-btn" id="musicBtn" style="display:none" aria-label="Reproducir música">🎵</button>
+
+  <!-- Audio MP3 -->
+  <audio id="backgroundMusic" loop>
+    <source src="1.mp3" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
 
 <script>
 (function() {
@@ -349,7 +395,7 @@
     // Auto-play
     setInterval(() => goTo((current + 1) % slides.length), 4000);
 
-    // Swipe
+    // Swipe en móvil
     carousel.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
     carousel.addEventListener('touchend', e => {
       const diff = touchStartX - e.changedTouches[0].clientX;
@@ -366,7 +412,6 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          // Start typing when letter section is visible
           if (entry.target.id === 'letterSection' && !entry.target.dataset.started) {
             entry.target.dataset.started = 'true';
             startTyping();
@@ -418,7 +463,7 @@ Quiero seguir construyendo momentos contigo, hacerte feliz y demostrarte con hec
     "Gracias por amarme como lo haces 🥰",
     "Eres mi sueño hecho realidad 🌙",
     "Mi corazón late por ti 💓",
-    "Eres mi todo, Nickole 💗"
+    "Eres mi todo, Nicole 💗"
   ];
 
   const surpriseBtn = document.getElementById('surpriseBtn');
@@ -432,7 +477,6 @@ Quiero seguir construyendo momentos contigo, hacerte feliz y demostrarte con hec
     randomMessage.classList.remove('show');
     setTimeout(() => randomMessage.classList.add('show'), 50);
 
-    // Confetti hearts
     for (let j = 0; j < 12; j++) {
       const heart = document.createElement('span');
       heart.textContent = '💖';
@@ -448,14 +492,20 @@ Quiero seguir construyendo momentos contigo, hacerte feliz y demostrarte con hec
     }
   });
 
-  /* ===== MUSIC BUTTON ===== */
-  let playing = false;
+  /* ===== MUSIC BUTTON - MP3 ===== */
+  const audio = document.getElementById('backgroundMusic');
+  let isPlaying = false;
+
   musicBtn.addEventListener('click', function() {
-    playing = !playing;
-    musicBtn.textContent = playing ? '⏸️' : '🎵';
-    // To add real music, create an Audio object:
-    // const audio = new Audio('tu-cancion.mp3');
-    // playing ? audio.play() : audio.pause();
+    isPlaying = !isPlaying;
+
+    if (isPlaying) {
+      musicBtn.textContent = '⏸️';
+      audio.play();
+    } else {
+      musicBtn.textContent = '🎵';
+      audio.pause();
+    }
   });
 
   /* ===== SMOOTH SCROLL ===== */
